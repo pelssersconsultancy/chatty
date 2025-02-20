@@ -1,0 +1,93 @@
+{
+  "name": "chatty-frontend",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "prefix": "chatty",
+  "sourceRoot": "apps/chatty-frontend/src",
+  "tags": ["scope:chatty", "type:app"],
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:application",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/chatty-frontend",
+        "index": "apps/chatty-frontend/src/index.html",
+        "browser": "apps/chatty-frontend/src/main.ts",
+        "polyfills": ["zone.js"],
+        "tsConfig": "apps/chatty-frontend/tsconfig.app.json",
+        "inlineStyleLanguage": "scss",
+        "assets": [
+          {
+            "glob": "**/*",
+            "input": "apps/chatty-frontend/public"
+          }
+        ],
+        "styles": ["apps/chatty-frontend/src/styles.scss"],
+        "scripts": []
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "4kb",
+              "maximumError": "8kb"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "development": {
+          "optimization": false,
+          "extractLicenses": false,
+          "sourceMap": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@angular-devkit/build-angular:dev-server",
+      "options": {
+        "port": 3003
+      },
+      "configurations": {
+        "production": {
+          "buildTarget": "chatty-frontend:build:production"
+        },
+        "development": {
+          "buildTarget": "chatty-frontend:build:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "buildTarget": "chatty-frontend:build"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/chatty-frontend/jest.config.ts"
+      }
+    },
+    "serve-static": {
+      "executor": "@nx/web:file-server",
+      "options": {
+        "buildTarget": "chatty-frontend:build",
+        "port": 3003,
+        "staticFilePath": "dist/apps/chatty-frontend/browser",
+        "spa": true
+      }
+    }
+  }
+}
